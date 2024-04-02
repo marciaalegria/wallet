@@ -46,6 +46,7 @@ public class Main {
         }
     }
 
+
     private void gestionarCuentas() {
         if (authService.usuarioAutenticado()) {
             boolean salir = false;
@@ -100,7 +101,7 @@ public class Main {
         System.out.println("Ingrese la moneda:");
         String moneda = scanner.nextLine();
 
-        Account nuevaCuenta = new Account(nombreCuenta, saldoInicial, moneda);
+        Account nuevaCuenta = Account.createNewAccount(nombreCuenta, saldoInicial, moneda);
         cuentas.add(nuevaCuenta);
         System.out.println("La cuenta se agregó correctamente.");
     }
