@@ -17,6 +17,7 @@ public class Main {
         main.mostrarMenuPrincipal();
     }
 
+    //funcion que muestra menu principal
     public void mostrarMenuPrincipal() {
         boolean salir = false;
         while (!salir) {
@@ -32,6 +33,7 @@ public class Main {
             switch (opcion) {
                 case 1:
                     iniciarSesion();
+                    gestionarCuentas();
                     break;
                 case 2:
                     registrarUsuario();
@@ -46,7 +48,7 @@ public class Main {
         }
     }
 
-
+    //funcion quie gestiona cuentas
     private void gestionarCuentas() {
         if (authService.usuarioAutenticado()) {
             boolean salir = false;
@@ -132,7 +134,7 @@ public class Main {
 
         if (inicioSesionExitoso) {
             System.out.println("Inicio de sesión exitoso. ¡Bienvenido!");
-            // Aquí podrías agregar la lógica para lo que sucede después de iniciar sesión correctamente
+
         } else {
             System.out.println("Nombre de usuario o contraseña incorrectos. Inténtelo de nuevo.");
         }
@@ -145,14 +147,15 @@ public class Main {
         System.out.println("Ingrese una contraseña:");
         String contraseña = scanner.nextLine();
 
-        // Llamar al método de AuthService para registrar al usuario
+        // Llamamos al método de AuthService para registrar al usuario
         boolean registroExitoso = authService.registrarUsuario(nombreUsuario, contraseña);
 
         if (registroExitoso) {
             System.out.println("Registro exitoso. ¡Bienvenido!");
-            // Aquí podrías agregar la lógica para lo que sucede después de registrar al usuario correctamente
+
         } else {
             System.out.println("El nombre de usuario ya está en uso. Inténtelo de nuevo con un nombre de usuario diferente.");
         }
     }
+
 }
