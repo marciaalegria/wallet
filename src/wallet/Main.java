@@ -1,5 +1,6 @@
 package wallet;
 
+import wallet.model.Usuario;
 import wallet.service.AuthService;
 import java.util.Scanner;
 import wallet.model.Account;
@@ -21,22 +22,43 @@ public class Main {
     public void mostrarMenuPrincipal() {
         boolean salir = false;
         while (!salir) {
-            System.out.println("Bienvenido a tu aplicación wallet");
-            System.out.println("1. Iniciar sesión");
-            System.out.println("2. Registrarse");
-            System.out.println("3. Salir");
-            System.out.println("Por favor, seleccione una opción:");
+
+            if (!authService.usuarioAutenticado()) {
+                System.out.println("Bienvenido a aplicación wallet");
+                System.out.println("1. Iniciar sesión");
+                System.out.println("2. Registrarse");
+                System.out.println("3. Salir");
+                System.out.println("Por favor, seleccione una opción:");
+            } else {
+                System.out.println("Menú principal");
+                System.out.println("1. Gestionar cuentas");
+                System.out.println("2. Otra opción...");
+                System.out.println("3. Salir");
+                System.out.println("Por favor, seleccione una opción:");
+            }
 
             int opcion = scanner.nextInt();
             scanner.nextLine(); // Limpia el buffer del scanner
 
             switch (opcion) {
                 case 1:
-                    iniciarSesion();
-                    gestionarCuentas();
+                    if (!authService.usuarioAutenticado()) {
+                        System.out.println("debe registrarse para poder iniciar sesion");
+                    } else {
+                        System.out.println("Ingrese su nombre de usuario:");
+                        String nombreUsuario = scanner.nextLine();
+                        System.out.println("Ingrese su contraseña:");
+                        String contrasena = scanner.nextLine();
+                        iniciarSesion(nombreUsuario, contrasena);
+                        System.out.println(nombreUsuario);
+                    }
                     break;
                 case 2:
-                    registrarUsuario();
+                    if (!authService.usuarioAutenticado()) {
+                        registrarUsuario();
+                    } else {
+                        System.out.println("ya estas registrado inicia sesion");
+                    }
                     break;
                 case 3:
                     salir = true;
@@ -45,8 +67,27 @@ public class Main {
                     System.out.println("Opción no válida, ingrese una opción válida");
                     break;
             }
+
         }
     }
+
+
+
+    private boolean iniciarSesion(String nombreUsuario, String contrasena) {
+
+        // Lógica para verificar las credenciales e iniciar sesión
+        boolean inicioSesionExitoso =
+                authService.iniciarSesion(nombreUsuario, contrasena);
+
+        if (inicioSesionExitoso) {
+            System.out.println("Inicio de sesión exitoso. ¡Bienvenido!");
+            return true; // Devuelve true si el inicio de sesión fue exitoso
+        } else {
+            System.out.println("Nombre de usuario o contraseña incorrectos. Inténtelo de nuevo.");
+            return false; // Devuelve false si el inicio de sesión falló
+        }
+    }
+
 
     //funcion quie gestiona cuentas
     private void gestionarCuentas() {
@@ -122,40 +163,17 @@ public class Main {
         }
     }
 
-    private void iniciarSesion() {
-        System.out.println("Inicio de sesión");
-        System.out.println("Ingrese su nombre de usuario:");
-        String nombreUsuario = scanner.nextLine();
-        System.out.println("Ingrese su contraseña:");
-        String contrasena = scanner.nextLine();
-
-        // Lógica para verificar las credenciales e iniciar sesión
-        boolean inicioSesionExitoso = authService.iniciarSesion(nombreUsuario, contrasena);
-
-        if (inicioSesionExitoso) {
-            System.out.println("Inicio de sesión exitoso. ¡Bienvenido!");
-
-        } else {
-            System.out.println("Nombre de usuario o contraseña incorrectos. Inténtelo de nuevo.");
-        }
-    }
-
     private void registrarUsuario() {
         System.out.println("Registro de nuevo usuario");
         System.out.println("Ingrese un nombre de usuario:");
         String nombreUsuario = scanner.nextLine();
         System.out.println("Ingrese una contraseña:");
-        String contraseña = scanner.nextLine();
+        String contrasena = scanner.nextLine();
 
         // Llamamos al método de AuthService para registrar al usuario
-        boolean registroExitoso = authService.registrarUsuario(nombreUsuario, contraseña);
+        boolean registroExitoso = Usuario.registrarUsuario(nombreUsuario, contrasena);
+        System.out.println(Usuario.registrarUsuario(nombreUsuario, contrasena));
 
-        if (registroExitoso) {
-            System.out.println("Registro exitoso. ¡Bienvenido!");
-
-        } else {
-            System.out.println("El nombre de usuario ya está en uso. Inténtelo de nuevo con un nombre de usuario diferente.");
-        }
     }
 
 }
